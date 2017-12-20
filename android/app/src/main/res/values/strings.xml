@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">Gestao do Promotor</string>
+    <string name="facebook_app_id">2065532183725438</string>
+    <string name="bugsnag_appkey">00055e70250ad10fdc398c29dfc02fb0</string>
+</resources>
