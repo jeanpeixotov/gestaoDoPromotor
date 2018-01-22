@@ -58,16 +58,17 @@ export const DrawerNavigatorItems = ({
   );
 
 (DrawerNavigatorItems as any).defaultProps = {
-  activeTintColor: '#2196f3',
-  activeBackgroundColor: 'rgba(0, 0, 0, .04)',
+  activeTintColor: '#000',
+  activeBackgroundColor: '#f2f2f2',
   inactiveTintColor: 'rgba(0, 0, 0, .87)',
-  inactiveBackgroundColor: 'transparent',
+  inactiveBackgroundColor: '#f2f2f2',
 };
 
 const styles = StyleSheet.create({
   container: {
     marginTop: 0,
     paddingVertical: 0,
+    backgroundColor: '#f2f2f2'
   },
   item: {
     flexDirection: 'row',

@@ -1,5 +1,3 @@
-import { IQuiz } from './quiz';
-
 export interface IEventDate {
   eventId: number;
   beginDate: Date;
@@ -22,5 +20,4 @@ export interface IEvent {
   quizId?: number;
 
   enableQuiz: boolean;
-  quiz?: IQuiz;
 }

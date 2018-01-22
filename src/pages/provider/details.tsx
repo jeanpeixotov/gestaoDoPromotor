@@ -1,114 +1,193 @@
-import { Body, Button, Container, Content, Header, Icon, Left, Right, Spinner, Title, View } from 'native-base';
+import { Body, Button, Container, Content, Header, Icon, Left, List, ListItem, Right, Text, Title, Item, Input, Card, CardItem } from 'native-base';
 import * as React from 'react';
-import { Share, WebView } from 'react-native';
+import { Col, Row, Grid } from 'react-native-easy-grid';
+import { RefreshControl, StyleSheet } from 'react-native';
+import { NavigationDrawerScreenOptions } from 'react-navigation';
 
 import { BaseComponent, IStateBase } from '../../components/base';
-import { EmptyMessage } from '../../components/emptyMessage';
 import { ErrorMessage } from '../../components/errorMessage';
-import { providerRender } from '../../formatters/providerRender';
 import { IProvider } from '../../interfaces/provider';
+import { toast } from '../../providers/toast';
 import * as services from '../../services';
-import { enInformativeType } from '../../services/enums/informativeType';
 import { ProviderService } from '../../services/models/provider';
+import { theme } from '../../theme';
+import { PopupMenu } from '../../components/popupMenu';
 
 interface IState extends IStateBase {
-  loading: boolean;
-  provider?: IProvider;
-  html: string;
-  text?: string;
+  refreshing: boolean;
+  providers: IProvider[];
   error?: any;
 }
 
 export default class ProviderDetailsPage extends BaseComponent<IState> {
+  public actions:any = [{display: 'Maior Estoque', onPress: () => console.log('here i am')}, {display: 'Menor Estoque', onPress: () => console.log('here i am')},
+                        {display: 'Mais Vendas', onPress: () => console.log('here i am')}, {display: 'Menos Vendas', onPress: () => console.log('here i am')}];
+  public static navigationOptions: NavigationDrawerScreenOptions = {
+    drawerLabel: 'Fornecedores' as any,
+    drawerIcon: ({ tintColor }) => (
+      <Icon name='cart' style={{ color: tintColor }} />
+    )
+  };
+
   private providerService: ProviderService;
 
   constructor(props: any) {
     super(props);
 
     this.providerService = services.get('providerService');
-    const { provider } = this.params;
-
-    this.state = {
-      loading: provider ? false : true,
-      provider,
-      html: provider ? providerRender(provider) : null
-    };
+    this.state = { refreshing: true, providers: [] };
   }
 
   public componentDidMount(): void {
-    if (this.state.provider) return;
+    this.load();
+  }
 
-    this.providerService.get(this.params.id)
+  public details(provider: IProvider): void {
+    this.navigate('ProviderDetailsProduct', { provider });
+  }
+
+  public load(refresh: boolean = false): void {
+    this.setState({ refreshing: true }, true);
+
+    this.providerService.list(refresh)
       .logError()
       .bindComponent(this)
-      .subscribe(provider => {
-        const html = provider ? providerRender(provider) : null;
-        this.setState({ loading: false, provider, html });
-      }, error => this.setState({ loading: false, error }));
-  }
-
-  public share(): void {
-    Share.share({
-      title: this.state.provider.title,
-      message: this.state.text
-    });
-  }
-
-  public setText(text: string): void {
-    this.setState({ text });
+      .subscribe(providers => {
+        providers = providers || [];
+        this.setState({ refreshing: false, providers, error: false });
+      }, error => {
+        if (refresh) toast('Não conseguimos atualizar');
+        this.setState({ refreshing: false, error });
+      });
   }
 
   public render(): JSX.Element {
-    const { loading, html, provider, error } = this.state;
-    let title = 'Fornecedores';
-
-    if (provider) {
-      title = provider.typeId === enInformativeType.cell ? 'Célula' : 'Igreja';
-    }
+    const { refreshing, providers, error } = this.state;
 
     return (
-      <Container>
+      <Container style={styles.container}>
         <Header>
           <Left>
             <Button transparent onPress={() => this.goBack()}>
-              <Icon name='arrow-back' />
+              <Icon name='arrow-back' style={theme.menuIcon} />
             </Button>
           </Left>
           <Body>
-            <Title>{title}</Title>
+            <Title style={theme.headerTitle}>Produtos</Title>
           </Body>
-          <Right>
-            {provider &&
-              <Button transparent onPress={() => this.share()}>
-                <Icon name='share' />
-              </Button>
-            }
+          <Right style={{marginRight: 6}}>
+            <Button transparent>
+              <Icon name='camera' style={[theme.menuIcon]} />
+            </Button>
           </Right>
         </Header>
-        {loading &&
-          <Content>
-            <Spinner />
-          </Content>
-        }
-        {!loading && error &&
-          <Content>
+        <Header searchBar rounded>
+          <Item>
+            <Icon name="ios-search" style={styles.searchIcon}/>
+            <Input placeholder="Buscar" style={styles.searchBar}/>
+            <PopupMenu actions={this.actions}></PopupMenu>
+          </Item>
+          <Button transparent onPress={() => {}}>
+            <Text>Buscar</Text>
+          </Button>
+        </Header>
+        <Content
+          refreshControl={
+            <RefreshControl refreshing={refreshing} onRefresh={() => this.load(true)} />
+          }
+        >
+          {!refreshing && error && !providers.length &&
             <ErrorMessage error={error} />
-          </Content>
-        }
-        {!loading && !error && !provider &&
-          <Content>
-            <EmptyMessage icon='sad' message='Não encontramos' />
-          </Content>
-        }
-        {!loading && !error && !!provider &&
-          <View style={{ flex: 1 }}>
-            <WebView
-              source={{ html }}
-              onMessage={event => this.setText(event.nativeEvent.data)}
-              style={{ flex: 1 }} />
-          </View>
-        }
+          }
+          <List dataArray={providers} renderRow={provider =>
+            <ListItem key={provider.id}>
+              <Body>
+                <Card style={styles.card}>
+                  <CardItem>
+                    <Body style={styles.bodyListItem}>
+                      <Grid>
+                        <Row style={styles.rowTitle}><Text style={styles.title}>54534 - Produto X </Text></Row>
+                        <Row style={styles.rowContent}>
+                          <Col style={styles.colContent}>
+                            <Text style={styles.subTitle}>Estoque</Text>
+                            <Text style={styles.products} >200</Text>
+                          </Col>
+                          <Col style={styles.colContent}>
+                            <Text style={styles.subTitle}>Dias sem venda</Text>
+                            <Text style={styles.products}>1</Text>
+                          </Col>
+                        </Row>
+                        <Row style={styles.rowPlusButton}><Button transparent small onPress={() => this.details(provider)}><Icon name="ios-add-circle" style={{color: '#555'}}/></Button></Row>
+                      </Grid>
+                    </Body>
+                  </CardItem>
+                </Card>
+              </Body>
+            </ListItem>
+          }
+          />
+        </Content>
       </Container>
     );
   }
 }
+
+const styles = StyleSheet.create({
+  container: {
+    backgroundColor: '#F2F2F2'
+  },
+  card: {
+    width: 330,
+    marginRight: 50
+  },
+  title: {
+    fontSize: 18,
+    marginBottom: 15,
+    textAlign: 'center'
+  },
+  searchBar: {
+    paddingBottom: 5
+  },
+  searchIcon: {
+    paddingTop: 5
+  },
+  iconCamera: {
+    color: '#222'
+  },
+  bodyListItem:{
+    justifyContent: 'space-between',
+    flexDirection: 'column',
+    alignItems: 'center',
+    marginRight: 30
+  },
+  products: {
+    fontWeight: 'bold',
+  },
+  note: {
+    color: '#6600fc'
+  },
+  subTitle: {
+    textAlign: 'center',
+    color: '#6600fc',
+    fontWeight: 'bold',
+    marginBottom: 5
+  },
+  rowTitle: {
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
+  colContent: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: 10
+  },
+  rowContent: {
+    justifyContent: 'space-between',
+    width: 350
+  },
+  rowPlusButton: {
+    alignItems: 'flex-end',
+    justifyContent: 'flex-end',
+    width: 350
+  }
+});

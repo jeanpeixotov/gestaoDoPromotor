@@ -15,7 +15,6 @@ import { Navigator } from './navigator';
 import * as loaderOperador from './operators/loader';
 import * as services from './services';
 import { LogService } from './services/models/log';
-import { NotificationService } from './services/models/notification';
 import { TokenService } from './services/models/token';
 import getTheme from './theme/native-base/components';
 import platform from './theme/native-base/variables/platform';
@@ -26,18 +25,15 @@ interface IState {
 
 class App extends Component<any, IState> {
   private tokenService: TokenService;
-  private notificationService: NotificationService;
   private logService: LogService;
 
   private subscription: Subscription;
-  private navigator: any;
 
   constructor(props: any) {
     super(props);
 
     services.init();
     this.tokenService = services.get('tokenService');
-    this.notificationService = services.get('notificationService');
     this.logService = services.get('logService');
 
     this.state = { loading: true };
@@ -58,7 +54,6 @@ class App extends Component<any, IState> {
   public componentDidMount(): void {
     loaderOperador.setup(this.refs.loader as Loader);
     this.setState({ loading: false }, () => {
-      this.notificationService.setup(this.navigator);
     });
   }
 

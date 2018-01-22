@@ -5,6 +5,15 @@ import variablesTheme from './native-base/variables/platform';
 export const variables = variablesTheme;
 
 export const theme = StyleSheet.create({
+  headerTitle: {
+    textAlign: 'center',
+    fontSize: 17,
+    width: 225,
+    color: '#FFF'
+  },
+  menuIcon: {
+    color: '#FFF'
+  },
   buttonFacebook: {
     backgroundColor: '#3b5998'
   },
@@ -46,7 +55,13 @@ export const theme = StyleSheet.create({
     alignItems: 'flex-end'
   },
   listItem: {
-    marginLeft: 0
+    marginLeft: 8,
+    marginRight: 8,
+    marginTop: 8,
+    marginBottom: 3,
+    backgroundColor: '#FAFAFA',
+    borderWidth: 0.2,
+    borderColor: '#000',
   },
   listIconWrapper: {
     maxWidth: 45,

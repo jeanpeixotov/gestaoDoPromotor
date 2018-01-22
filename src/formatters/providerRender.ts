@@ -81,8 +81,8 @@ export function providerRender(provider: IProvider): string {
       </head>
       <body>
         <header>
-          ${provider.title}
-          <small>${dateFormatter.format(provider.date, 'dddd, DD [de] MMMM [de] YYYY')}</small>
+        <input type="text" name="search" value="Pesquisar">
+        <i class="fa fa-file"></i>
         </header>
         <br />
         <div class="content">

@@ -7,7 +7,6 @@ export function profileFactory(container: Container): ProfileService {
     churchSlug,
     container.get('apiService'),
     container.get('cacheService'),
-    container.get('notificationService'),
     container.get('tokenService')
   );
 }

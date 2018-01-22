@@ -1,17 +1,15 @@
-import { Button, Container, Icon, Text, View, Form, Item, Input } from 'native-base';
+import { Button, Container, Text, View, Form, Item, Input } from 'native-base';
 import * as React from 'react';
-import { Animated, Image, ImageBackground, StatusBar, StyleSheet } from 'react-native';
+import { Animated, Image, StatusBar, StyleSheet } from 'react-native';
 import SplashScreen from 'react-native-splash-screen';
 
 import { BaseComponent, IStateBase } from '../components/base';
 import { alertError } from '../providers/alert';
 import * as services from '../services';
 import { FacebookService } from '../services/models/facebook';
-import { NotificationService } from '../services/models/notification';
-import { ProfileService } from '../services/models/profile';
 import { StorageService } from '../services/models/storage';
 import { isDevelopment } from '../settings';
-import { theme, variables } from '../theme';
+import { variables } from '../theme';
 
 interface IState extends IStateBase {
   loaded: boolean;
@@ -23,16 +21,12 @@ interface IState extends IStateBase {
 
 export default class WelcomPage extends BaseComponent<IState> {
   private storageService: StorageService;
-  private notificationService: NotificationService;
-  private profileService: ProfileService;
   private facebookService: FacebookService;
 
   constructor(props: any) {
     super(props);
 
     this.storageService = services.get('storageService');
-    this.notificationService = services.get('notificationService');
-    this.profileService = services.get('profileService');
     this.facebookService = services.get('facebookService');
 
     this.state = {
@@ -68,15 +62,9 @@ export default class WelcomPage extends BaseComponent<IState> {
 
     this.setState({ loaded: true });
     const finalHeight = event.nativeEvent.layout.height;
-    this.notificationService.appDidOpen();
 
     this.storageService.get<boolean>('welcomeCompleted')
-      .combineLatest(this.notificationService.hasInitialNotification().first())
-      .map(([welcomeCompleted, hasNotification]) => {
-
-        if (hasNotification) {
-          return;
-        }
+      .map((welcomeCompleted) => {
 
         if (welcomeCompleted) {
           this.navigateToHome();
@@ -113,7 +101,6 @@ export default class WelcomPage extends BaseComponent<IState> {
 
     providers[provider].login()
       .filter(accessToken => !!accessToken)
-      .switchMap(accessToken => this.profileService.register(provider, accessToken))
       .loader()
       .logError()
       .bindComponent(this)
@@ -124,29 +111,28 @@ export default class WelcomPage extends BaseComponent<IState> {
     return (
       <Container>
         <View style={styles.container}>
-          <StatusBar backgroundColor='#000000'></StatusBar>
+          <StatusBar backgroundColor='#000'></StatusBar>
           <Image source={require('../images/logo.png')} style={styles.logo} />
           <Animated.View
             onLayout={(event: any) => this.viewLoaded(event)}
             style={this.state.animationClass}>
 
-            <Form>
-              <Item style={styles.formItem}>
-                <Input placeholder='Usuário' style={styles.formInput} />
+            <Form style={styles.form}>
+              <Item style={styles.formItem} inlineLabel>
+                <Input style={styles.formInput} placeholder='Usuário' />
               </Item>
-              <Item style={styles.formItem}>
-                <Input placeholder='Senha' style={styles.formInput} secureTextEntry />
+              <Item style={styles.formItem} inlineLabel>
+                <Input style={styles.formInput} secureTextEntry placeholder='Senha' />
               </Item>
             </Form>
             <View style={styles.buttons}>
-              <Button onPress={() => this.navigate('Welcome')} iconLeft style={StyleSheet.flatten([styles.loginIcon, theme.iconLarge])}>
-                <Icon name='contact' />
-                <Text>Entrar</Text>
+              <Button onPress={() => this.navigate('Welcome')} style={styles.buttonAccess} primary rounded>
+                <Text style={styles.buttonAccessText}>Acessar</Text>
               </Button>
             </View>
             <View style={styles.skipWrapper}>
               <Button block transparent onPress={() => this.completed()}>
-                <Text style={styles.skipText}>PULAR</Text>
+                <Text style={styles.skipText}>Esqueci minha senha</Text>
               </Button>
             </View>
           </Animated.View>
@@ -162,34 +148,24 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center'
   },
-  loginIcon: {
-    marginTop: 20,
-    marginBottom: 10,
-    color: variables.accent
+  form: {
+    marginTop: 0,
+    marginBottom: 40
   },
   formItem: {
-    width: 200,
-    textAlign: 'center',
-    marginRight: 25,
-    color: 'white',
+    height: 32,
+    width: 300,
+    marginBottom: 35,
     backgroundColor: 'transparent'
   },
-  formInput: {
-    color: 'white'
+  labelFormItem: {
+    marginBottom: 7,
+    fontSize: 14
   },
-  // welcome: {
-  //   fontSize: 30,
-  //   textAlign: 'center',
-  //   marginBottom: 5,
-  //   color: 'white',
-  //   backgroundColor: 'transparent'
-  // },
-  // instructions: {
-  //   fontSize: 20,
-  //   textAlign: 'center',
-  //   color: 'white',
-  //   backgroundColor: 'transparent'
-  // },
+  formInput: {
+    color: 'black',
+    fontSize: 16
+  },
   background: {
     flex: 1,
     justifyContent: 'center',
@@ -200,23 +176,33 @@ const styles = StyleSheet.create({
   },
   logo: {
     height: 120,
-    width: 120,
-    marginBottom: 30
+    width: 250,
+    marginBottom: 10
   },
   buttons: {
-    marginTop: 20,
+    marginTop: 10,
     flexDirection: 'row',
     flexWrap: 'wrap',
     justifyContent: 'center',
     alignItems: 'center'
   },
   buttonFirst: {
-    marginRight: 20
+    marginRight: 20,
+    fontSize: 15
+  },
+  buttonAccess: {
+    backgroundColor: '#6600fc',
+    width: 200,
+  },
+  buttonAccessText: {
+    textAlign: 'center',
+    width: 150
   },
   skipWrapper: {
-    marginTop: 50,
+    marginTop: 5,
   },
   skipText: {
-    color: 'white'
+    color: 'black',
+    fontSize: 12
   }
 });

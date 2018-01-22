@@ -11,6 +11,7 @@ import { eventListFormatter, IEventListFormatted } from '../../formatters/eventL
 import { toast } from '../../providers/toast';
 import * as services from '../../services';
 import { EventService } from '../../services/models/event';
+import { theme } from '../../theme';
 
 interface IState extends IStateBase {
   refreshing: boolean;
@@ -66,11 +67,11 @@ export default class EventListPage extends BaseComponent<IState> {
         <Header>
           <Left>
             <Button transparent onPress={() => this.openDrawer()}>
-              <Icon name='menu' />
+              <Icon name='menu' style={theme.menuIcon}/>
             </Button>
           </Left>
           <Body>
-            <Title>Agenda</Title>
+            <Title style={theme.headerTitle}>Agenda</Title>
           </Body>
           <Right />
         </Header>
@@ -116,8 +117,8 @@ export default class EventListPage extends BaseComponent<IState> {
               <Button
                 block
                 onPress={() => this.details(data)}
-                style={styles.buttonDetails}>
-                <Text style={styles.eventTitle}>{data.event.title}</Text>
+                style={styles.buttonDetails} rounded>
+                <Text style={styles.eventTitle}>Reunião para fechamento do balanço</Text>
                 <Text style={styles.eventHour}>
                   {
                     dateFormatter.format(data.beginDate, 'HH:mm') +
@@ -143,7 +144,9 @@ const styles = StyleSheet.create({
   },
   listItemHeaderText: {
     fontWeight: 'bold',
-    opacity: 0.6
+    opacity: 0.8,
+    textAlign: 'center',
+    width: 300
   },
   listItem: {
     borderBottomWidth: 0,
@@ -166,10 +169,12 @@ const styles = StyleSheet.create({
   eventTitle: {
     fontSize: 16,
     marginBottom: 2,
-    lineHeight: 22
+    lineHeight: 22,
+    marginLeft: 4
   },
   eventHour: {
-    opacity: 0.8
+    opacity: 0.8,
+    marginLeft: 4
   },
   icon: {
     width: 40,
@@ -181,7 +186,7 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-start',
     alignItems: 'flex-start',
     flexDirection: 'column',
-    paddingLeft: 10,
+    paddingLeft: 20,
     paddingRight: 10
   }
 });

@@ -61,7 +61,7 @@ class ProviderCard extends BaseComponent<IState> {
           </CardItem>
         }
         {!loading && provider &&
-          <View>
+          <View style={styles.card}>
             <CardItem button onPress={() => this.navigate('ProviderDetails', { provider })}>
               <Icon name={provider.icon} />
               <View style={styles.viewContent}>
@@ -69,7 +69,7 @@ class ProviderCard extends BaseComponent<IState> {
                 <Text note>{dateFormatter.format(provider.date, 'dddd, DD [de] MMMM [de] YYYY')}</Text>
               </View>
               <Right>
-                <Icon name='arrow-forward' />
+                <Icon name='arrow-forward' style={{color: '#6600fc'}}/>
               </Right>
             </CardItem>
             <CardItem footer style={theme.alignRight}>
@@ -87,6 +87,9 @@ class ProviderCard extends BaseComponent<IState> {
 const styles = StyleSheet.create({
   viewContent: {
     width: variables.deviceWidth - 120
+  },
+  card: {
+    backgroundColor: '#FAFAFA'
   }
 });
 

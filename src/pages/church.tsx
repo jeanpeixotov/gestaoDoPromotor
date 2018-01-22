@@ -83,11 +83,11 @@ export default class ChurchPage extends BaseComponent<IState> {
         <Header>
           <Left>
             <Button transparent onPress={() => this.openDrawer()}>
-              <Icon name='menu' />
+              <Icon name='menu' style={theme.menuIcon}/>
             </Button>
           </Left>
           <Body>
-            <Title>{church ? church.name : 'Igreja'}</Title>
+            <Title style={theme.headerTitle}>{church ? church.name : 'Igreja'}</Title>
           </Body>
           <Right />
         </Header>

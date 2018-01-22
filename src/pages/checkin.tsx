@@ -3,33 +3,33 @@ import {
   Button,
   Container,
   Content,
-  H2,
   Header,
   Icon,
   Left,
-  List,
-  ListItem,
   Right,
   Spinner,
   Text,
   Title,
   View,
+  ListItem,
+  Picker,
+  Item,
+  Label,
+  Card,
+  CardItem
 } from 'native-base';
 import * as React from 'react';
-import { Image, Linking, StyleSheet } from 'react-native';
+import { Linking, StyleSheet } from 'react-native';
 import { NavigationDrawerScreenOptions } from 'react-navigation';
 
 import { BaseComponent, IStateBase } from '../components/base';
 import { ErrorMessage } from '../components/errorMessage';
-import { phoneFormatter } from '../formatters/phone';
-import { IChurch } from '../interfaces/church';
 import * as services from '../services';
 import { ChurchService } from '../services/models/church';
 import { theme } from '../theme';
 
 interface IState extends IStateBase {
   loading: boolean;
-  church?: IChurch;
   error?: any;
 }
 
@@ -55,20 +55,8 @@ export default class CheckInPage extends BaseComponent<IState> {
       .logError()
       .bindComponent(this)
       .subscribe(church => {
-        this.setState({ loading: false, church, error: null });
+        this.setState({ loading: false, error: null });
       }, error => this.setState({ loading: false, error }));
-  }
-
-  public openPhone(): void {
-    Linking.openURL(`tel:${this.state.church.phone}`);
-  }
-
-  public openAddress(): void {
-    Linking.openURL(`geo:${this.state.church.latitude},${this.state.church.longitude}?q=${this.state.church.address}`);
-  }
-
-  public openEmail(): void {
-    Linking.openURL(`mailto:${this.state.church.email}`);
   }
 
   public openUrl(url: string): void {
@@ -76,93 +64,66 @@ export default class CheckInPage extends BaseComponent<IState> {
   }
 
   public render(): JSX.Element {
-    const { church, loading, error } = this.state;
+    const { loading, error } = this.state;
 
     return (
       <Container>
         <Header>
           <Left>
             <Button transparent onPress={() => this.openDrawer()}>
-              <Icon name='menu' />
+              <Icon name='menu' style={theme.menuIcon}/>
             </Button>
           </Left>
           <Body>
-            <Title>{church ? church.name : 'Igreja'}</Title>
+            <Title style={theme.headerTitle}>Check-In</Title>
           </Body>
           <Right />
         </Header>
-        <Content>
+        <Content style={styles.container}>
           {loading && <Spinner />}
           {!loading && !!error &&
             <ErrorMessage error={error} />
           }
-          {!loading && !error && church &&
-            <View style={styles.container}>
-              <View style={theme.alignCenter}>
-                <Image source={require('../images/logo.png')} style={styles.logo} />
-                <H2 style={styles.headerText}>{church.name}</H2>
-              </View>
-              <List style={styles.list}>
-                {!!church.phone &&
-                  <ListItem
-                    button
-                    onPress={() => this.openPhone()}
-                    style={styles.listItem}>
-                    <Left style={theme.listIconWrapper}>
-                      <Icon name='call' style={theme.listIcon} />
-                    </Left>
-                    <Body>
-                      <Text>{phoneFormatter(church.phone)}</Text>
-                    </Body>
-                  </ListItem>
-                }
-                {!!church.email &&
-                  <ListItem
-                    button
-                    onPress={() => this.openEmail()}
-                    style={styles.listItem}>
-                    <Left style={theme.listIconWrapper}>
-                      <Icon name='mail' style={theme.listIcon} />
-                    </Left>
-                    <Body>
-                      <Text>{church.email}</Text>
-                    </Body>
-                  </ListItem>
-                }
-                {!!church.address &&
-                  <ListItem
-                    button
-                    onPress={() => this.openAddress()}
-                    style={styles.listItem}>
-                    <Left style={theme.listIconWrapper}>
-                      <Icon name='pin' style={theme.listIcon} />
-                    </Left>
-                    <Body>
-                      <Text>{church.address}</Text>
-                    </Body>
-                  </ListItem>
-                }
-                {church.social.map(social => {
-                  const icons: any = { facebook: 'logo-facebook', youtube: 'logo-youtube' };
-                  const icon = icons[social.name] || 'globe';
-
-                  return (
-                    <ListItem
-                      key={social.name}
-                      button
-                      onPress={() => this.openUrl(social.url)}
-                      style={styles.listItem}>
-                      <Left style={theme.listIconWrapper}>
-                        <Icon name={icon} style={theme.listIcon} />
-                      </Left>
-                      <Body>
-                        <Text>{social.name === 'website' ? social.url : social.name.toUpperCase()}</Text>
-                      </Body>
-                    </ListItem>
-                  );
-                })}
-              </List>
+          {!loading && !error &&
+            <View style={StyleSheet.flatten([theme.emptyMessage, theme.alignCenter])}>
+              <Card style={styles.thumbnail}>
+                <CardItem>
+                  <Body style={styles.cardContent}>
+                  </Body>
+                </CardItem>
+              </Card>
+              <Text style={styles.loginText}>Escolha a rede e a loja que deseja fazer o checkin:</Text>
+              <Label style={styles.label}>Rede</Label>
+              <ListItem>
+                <Picker
+                  iosHeader="Rede"
+                  mode="dropdown"
+                  selectedValue={"key0"}
+                  style={styles.picker}
+                >
+                  <Item label="Assai" value="key0" />
+                  <Item label="Extra" value="key1" />
+                  <Item label="Carrefour" value="key2" />
+                </Picker>
+              </ListItem>
+              <Label style={styles.label}>Loja</Label>
+              <ListItem style={styles.listItem}>
+                <Picker
+                  iosHeader="Loja"
+                  mode="dropdown"
+                  selectedValue={"key0"}
+                  style={styles.picker}
+                >
+                  <Item label="Sorocaba 1" value="key0" />
+                  <Item label="Sorocaba 2" value="key1" />
+                  <Item label="São Paulo 1" value="key2" />
+                </Picker>
+              </ListItem>
+              <Button block onPress={() => this.navigate('Welcome', { force: true })} rounded>
+                <Text>Check-in</Text>
+              </Button>
             </View>
+
           }
         </Content>
       </Container>
@@ -172,21 +133,32 @@ export default class CheckInPage extends BaseComponent<IState> {
 
 const styles = StyleSheet.create({
   container: {
-    paddingTop: 20,
-    paddingBottom: 20
+    backgroundColor: '#F2F2F2'
   },
-  logo: {
-    height: 120,
-    width: 120,
-    marginBottom: 30
+  loginText: {
+    marginTop: 10,
+    textAlign: 'center',
+    marginBottom: 20
   },
-  headerText: {
-    opacity: 0.6
+  picker: {
+    width: 270,
+    height: 18
   },
-  list: {
-    marginTop: 30
+  thumbnail: {
+    width: 300,
+    height: 200,
+    borderWidth: 1,
+    borderColor: '#000'
+  },
+  label: {
+    marginTop: 20
   },
   listItem: {
-    borderBottomWidth: 0
+    marginBottom: 30
+  },
+  cardContent: {
+    flexDirection: 'column',
+    justifyContent: 'center',
+    alignItems: 'center'
   }
 });

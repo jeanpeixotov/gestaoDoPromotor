@@ -4,16 +4,13 @@ import { NavigationDrawerScreenOptions } from 'react-navigation';
 
 import { BaseComponent } from '../../components/base';
 import { theme } from '../../theme';
-import ChurchCard from './components/churchCard';
-import EventCard from './components/eventCard';
-import EventFeaturedCard from './components/eventFeaturedCard';
 import ProviderCard from './components/providerCard';
 
 export default class HomePage extends BaseComponent {
   public static navigationOptions: NavigationDrawerScreenOptions = {
     drawerLabel: 'Início' as any,
     drawerIcon: ({ tintColor }) => (
-      <Icon name='home' style={{ color: tintColor }} />
+      <Icon name='home' style={{ color: tintColor }}/>
     )
   };
 
@@ -24,20 +21,17 @@ export default class HomePage extends BaseComponent {
         <Header>
           <Left>
             <Button transparent onPress={() => this.openDrawer()}>
-              <Icon name='menu' />
+              <Icon style={theme.menuIcon} name='menu' />
             </Button>
           </Left>
           <Body>
-            <Title>Gestão do Promotor</Title>
+            <Title style={theme.headerTitle}>Início</Title>
           </Body>
           <Right />
         </Header>
         <Content>
           <View style={theme.cardsPadding}>
-            <EventFeaturedCard></EventFeaturedCard>
-            <ChurchCard></ChurchCard>
             <ProviderCard></ProviderCard>
-            <EventCard></EventCard>
           </View>
         </Content>
       </Container>

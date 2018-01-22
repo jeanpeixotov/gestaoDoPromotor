@@ -7,7 +7,7 @@ const platform = Platform.OS;
 const platformStyle = undefined;
 
 const primary = '#263238';
-const accent = '#3D59F9';
+const accent = '#6600fc';
 
 export default {
   platformStyle,
@@ -172,15 +172,15 @@ export default {
 
 
   // Header
-  toolbarBtnColor: (platform === 'ios') ? accent : '#fff',
-  toolbarDefaultBg: (platform === 'ios') ? '#F8F8F8' : primary,
+  toolbarBtnColor: (platform === 'ios') ? accent : '#f2f2f2',
+  toolbarDefaultBg: (platform === 'ios') ? '#F8F8F8' : accent,
   toolbarHeight: (platform === 'ios') ? 64 : 56,
   toolbarIconSize: (platform === 'ios') ? 20 : 22,
   toolbarSearchIconSize: (platform === 'ios') ? 20 : 23,
   toolbarInputColor: (platform === 'ios') ? '#CECDD2' : '#fff',
   searchBarHeight: (platform === 'ios') ? 30 : 40,
   toolbarInverseBg: '#222',
-  toolbarTextColor: (platform === 'ios') ? accent : '#fff',
+  toolbarTextColor: (platform === 'ios') ? accent : '#FFF',
   toolbarDefaultBorder: (platform === 'ios') ? '#cdcdce' : primary,
   iosStatusbar: (platform === 'ios') ? 'dark-content' : 'light-content',
   get statusBarColor() {
@@ -273,7 +273,7 @@ export default {
 
 
   // Text
-  textColor: '#000',
+  textColor: '#222',
   inverseTextColor: '#fff',
   noteFontSize: 14,
 
@@ -285,7 +285,7 @@ export default {
   subtitleColor: (platform === 'ios') ? '#8e8e93' : '#FFF',
 
   // New Variable
-  titleFontColor: (platform === 'ios') ? primary : '#fff',
+  titleFontColor: (platform === 'ios') ? primary : '#222',
 
 
   // Other

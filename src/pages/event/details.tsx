@@ -63,13 +63,13 @@ export default class EventDetailsPage extends BaseComponent<IState> {
             </Button>
           </Left>
           <Body>
-            <Title>Evento</Title>
+            <Title style={theme.headerTitle}>Evento</Title>
           </Body>
           <Right />
         </Header>
         <Content>
           <View style={styles.header}>
-            <H2 style={styles.headerText}>{event.title}</H2>
+            <H2 style={styles.headerText}>Reunião para fechamento do balanço</H2>
             <Text note style={styles.headerNote}>
               {dateFormatter.format(date.beginDate, 'ddd, DD [de] MMMM [de] YYYY [às] HH:mm')}
               {date.endDate ? ' - ' + dateFormatter.format(date.endDate, 'HH:mm') : ''}

@@ -56,7 +56,7 @@ export class PopupMenu extends React.Component<IProps> {
 
     return (
       <Button {...props} onPress={() => this.showMenu()} ref='menu'>
-        <Icon name='more' />
+        <Icon name='funnel' />
       </Button>
     );
   }

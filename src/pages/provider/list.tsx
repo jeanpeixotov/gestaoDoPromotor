@@ -1,11 +1,11 @@
-import { Body, Button, Container, Content, Header, Icon, Left, List, ListItem, Right, Text, Title } from 'native-base';
+import { Body, Button, Container, Content, Header, Icon, Left, List, ListItem, Right, Text, Title, Card, CardItem } from 'native-base';
+import { Col, Row, Grid } from 'react-native-easy-grid';
 import * as React from 'react';
-import { RefreshControl } from 'react-native';
+import { RefreshControl, StyleSheet } from 'react-native';
 import { NavigationDrawerScreenOptions } from 'react-navigation';
 
 import { BaseComponent, IStateBase } from '../../components/base';
 import { ErrorMessage } from '../../components/errorMessage';
-import { dateFormatter } from '../../formatters/date';
 import { IProvider } from '../../interfaces/provider';
 import { toast } from '../../providers/toast';
 import * as services from '../../services';
@@ -62,15 +62,15 @@ export default class ProviderListPage extends BaseComponent<IState> {
     const { refreshing, providers, error } = this.state;
 
     return (
-      <Container>
+      <Container style={styles.container}>
         <Header>
           <Left>
             <Button transparent onPress={() => this.openDrawer()}>
-              <Icon name='menu' />
+              <Icon name='menu' style={theme.menuIcon}/>
             </Button>
           </Left>
           <Body>
-            <Title>Fornecedores</Title>
+            <Title style={theme.headerTitle}>Fornecedores</Title>
           </Body>
           <Right />
         </Header>
@@ -83,17 +83,29 @@ export default class ProviderListPage extends BaseComponent<IState> {
             <ErrorMessage error={error} />
           }
           <List dataArray={providers} renderRow={provider =>
-            <ListItem button key={provider.id} style={theme.listItem} onPress={() => this.details(provider)}>
-              <Left style={theme.listIconWrapper}>
-                <Icon name={provider.icon} style={theme.listIcon} />
-              </Left>
+            <ListItem key={provider.id}>
               <Body>
-                <Text>{provider.title}</Text>
-                <Text note>{dateFormatter.format(provider.date, 'dddd, DD [de] MMMM [de] YYYY')}</Text>
+                <Card style={styles.card}>
+                  <CardItem>
+                    <Body style={styles.bodyListItem}>
+                      <Grid>
+                        <Row style={styles.rowTitle}><Text style={styles.title}>Assaí</Text></Row>
+                        <Row style={styles.rowContent}>
+                          <Col style={styles.colContent}>
+                            <Text style={styles.subTitle}>Produtos na loja</Text>
+                            <Text style={styles.products} >200</Text>
+                          </Col>
+                          <Col style={styles.colContent}>
+                            <Text style={styles.subTitle}>Produtos em estoque</Text>
+                            <Text style={styles.products} >187</Text>
+                          </Col>
+                        </Row>
+                        <Row style={styles.rowPlusButton}><Button transparent small onPress={() => this.details(provider)}><Icon name="ios-add-circle" style={{color: '#555'}}/></Button></Row>
+                      </Grid>
+                    </Body>
+                  </CardItem>
+                </Card>
               </Body>
-              <Right style={theme.listIconWrapperSmall}>
-                <Icon name='arrow-forward' />
-              </Right>
             </ListItem>
           }
           />
@@ -102,3 +114,56 @@ export default class ProviderListPage extends BaseComponent<IState> {
     );
   }
 }
+
+const styles = StyleSheet.create({
+  container: {
+    backgroundColor: '#F2F2F2'
+  },
+  card: {
+    width: 330,
+    marginRight: 50
+  },
+  title: {
+    fontSize: 18,
+    marginBottom: 15,
+    width: 200,
+    textAlign: 'center'
+  },
+  bodyListItem:{
+    justifyContent: 'space-between',
+    flexDirection: 'column',
+    alignItems: 'center',
+    marginRight: 30
+  },
+  products: {
+    fontWeight: 'bold',
+  },
+  note: {
+    color: '#6600fc'
+  },
+  subTitle: {
+    textAlign: 'center',
+    color: '#6600fc',
+    fontWeight: 'bold',
+    marginBottom: 5
+  },
+  rowTitle: {
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
+  colContent: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: 10
+  },
+  rowContent: {
+    justifyContent: 'space-between',
+    width: 350,
+    marginLeft: 15
+  },
+  rowPlusButton: {
+    alignItems: 'flex-end',
+    justifyContent: 'flex-end',
+    width: 350
+  }
+});

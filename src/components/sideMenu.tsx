@@ -1,6 +1,6 @@
 import { Text } from 'native-base';
 import * as React from 'react';
-import { Dimensions, Image, ScrollView, StyleSheet, View } from 'react-native';
+import { Dimensions, ScrollView, StyleSheet, View } from 'react-native';
 import { NavigationScreenProps } from 'react-navigation';
 
 import { IUserToken } from '../interfaces/userToken';
@@ -11,7 +11,7 @@ import { BaseComponent, IStateBase } from './base';
 import { DrawerNavigatorItems as DrawerItems } from './drawerItems';
 
 const ROUTES_ROLES = [
-  { key: 'ChurchReport', roles: ['churchReport'] },
+  { key: '', roles: [''] },
   { key: 'Dev', roles: ['sysAdmin'] }
 ];
 
@@ -58,10 +58,9 @@ export class SideMenu extends BaseComponent<IState, NavigationScreenProps<any>> 
     return (
       <View style={styles.container}>
         <View style={styles.header}>
-          <Image source={require('../images/logo.png')} style={styles.logo} />
-          <Text style={styles.headerText}> Gestão do Promotor</Text>
+          <Text style={styles.headerText}>Menu</Text>
         </View>
-        <ScrollView>
+        <ScrollView style={styles.drawerItems}>
           <DrawerItems {...this.props} routes={routes} />
         </ScrollView>
       </View>
@@ -76,7 +75,6 @@ const styles = StyleSheet.create({
   },
   header: {
     backgroundColor: variables.toolbarDefaultBg,
-    // height: 200
     flexDirection: 'row',
     alignItems: 'center',
     padding: 16,
@@ -87,8 +85,15 @@ const styles = StyleSheet.create({
     width: 80,
     marginRight: 20
   },
+  drawerItems: {
+    backgroundColor: '#F2F2F2'
+  },
   headerText: {
+    marginTop: 5,
+    marginBottom: 5,
     fontSize: 20,
+    textAlign: 'center',
+    width: 225,
     color: variables.platform === 'ios' ? variables.defaultTextColor : variables.toolbarTextColor
   }
 });

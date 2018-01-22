@@ -3,14 +3,17 @@ import {
   Button,
   Container,
   Content,
+  H2,
   Header,
   Icon,
   Left,
+  List,
   Right,
   Spinner,
-  Text,
   Title,
   View,
+  ListItem,
+  Text
 } from 'native-base';
 import * as React from 'react';
 import { Image, Linking, StyleSheet } from 'react-native';
@@ -27,11 +30,11 @@ interface IState extends IStateBase {
   error?: any;
 }
 
-export default class ExitPage extends BaseComponent<IState> {
+export default class AboutPage extends BaseComponent<IState> {
   public static navigationOptions: NavigationDrawerScreenOptions = {
-    drawerLabel: 'Sair' as any,
+    drawerLabel: 'Sobre o aplicativo' as any,
     drawerIcon: ({ tintColor }) => (
-      <Icon name='exit' style={{ color: tintColor }} />
+      <Icon name='information-circle' style={{ color: tintColor }} />
     )
   };
 
@@ -65,11 +68,11 @@ export default class ExitPage extends BaseComponent<IState> {
         <Header>
           <Left>
             <Button transparent onPress={() => this.openDrawer()}>
-              <Icon name='menu' style={theme.menuIcon} />
+              <Icon name='menu' style={theme.menuIcon}/>
             </Button>
           </Left>
           <Body>
-            <Title>{'Gestão do Promotor'}</Title>
+            <Title style={theme.headerTitle}>{'Sobre o aplicativo'}</Title>
           </Body>
           <Right />
         </Header>
@@ -80,14 +83,16 @@ export default class ExitPage extends BaseComponent<IState> {
           }
           {!loading && !error &&
             <View style={styles.container}>
-              <View style={StyleSheet.flatten([theme.emptyMessage, theme.alignCenter])}>
+              <View style={theme.alignCenter}>
                 <Image source={require('../images/logo.png')} style={styles.logo} />
-
-                <Button block onPress={() => this.navigate('Welcome', { force: true })}>
-                  <Text>SAIR</Text>
-                </Button>
+                <H2 style={styles.headerText}>{'Sobre o aplicativo'}</H2>
               </View>
-
+              <List style={styles.list}>
+                <ListItem last>
+                  <Text style={styles.about}>Consulte informações sobre seus promotores a qualquer hora e em qualquer
+                  lugar. Acompanhe métricas e analise performance por região ou filial.</Text>
+                </ListItem>
+              </List>
             </View>
           }
         </Content>
@@ -102,17 +107,20 @@ const styles = StyleSheet.create({
     paddingBottom: 20
   },
   logo: {
-    height: 120,
-    width: 120,
+    height: 150,
+    width: 300,
     marginBottom: 30
   },
   headerText: {
-    opacity: 0.6
+    marginBottom: 10
   },
   list: {
-    marginTop: 30
+    marginTop: 0
   },
   listItem: {
     borderBottomWidth: 0
+  },
+  about: {
+    textAlign: 'center'
   }
 });
