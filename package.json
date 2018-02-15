@@ -13,7 +13,7 @@
     "axios": "0.17.1",
     "base-64": "0.1.0",
     "bugsnag-react-native": "2.7.5",
-    "lodash": "4.17.4",
+    "lodash": "4.17.5",
     "moment": "2.19.4",
     "native-base": "2.3.5",
     "prop-types": "15.6.0",
