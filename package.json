@@ -18,7 +18,7 @@
     "native-base": "2.3.5",
     "prop-types": "15.6.0",
     "react": "16.2.0",
-    "react-native": "0.51.0",
+    "react-native": "0.63.0",
     "react-native-busy-indicator": "1.1.0",
     "react-native-device-info": "0.13.0",
     "react-native-fbsdk": "git+https://github.com/facebook/react-native-fbsdk#23ae582dd8ebc48592e1cfa1b0e4bc35e98a4ab0",
