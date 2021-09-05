@@ -10,7 +10,7 @@
     "release-android": "sh release.android.sh"
   },
   "dependencies": {
-    "axios": "0.17.1",
+    "axios": "0.21.3",
     "base-64": "0.1.0",
     "bugsnag-react-native": "2.7.5",
     "lodash": "4.17.4",
