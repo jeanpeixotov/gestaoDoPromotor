@@ -14,7 +14,7 @@
     "base-64": "0.1.0",
     "bugsnag-react-native": "2.7.5",
     "lodash": "4.17.4",
-    "moment": "2.19.4",
+    "moment": "2.29.4",
     "native-base": "2.3.5",
     "prop-types": "15.6.0",
     "react": "16.2.0",
